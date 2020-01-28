@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  server:
+    build: ./server
+    image: rusbitech-test/server
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+    environment:
+      WAIT_HOSTS: db:27017
+
+  db:
+    image: mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    restart: always
+
+  client:
+    image: rusbitech-test/client
+    build: ./client
+    ports:
+      - '8080:80'
+    depends_on:
+      - server
+
+volumes:
+  mongo-data:
